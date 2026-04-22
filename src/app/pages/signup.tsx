@@ -44,8 +44,8 @@ export function SignupPage() {
     try {
       await signup(email, password, phone || undefined);
       navigate('/');
-    } catch (err) {
-      setError('Đăng ký thất bại. Vui lòng thử lại.');
+    } catch (err: any) {
+      setError(err.message || 'Đăng ký thất bại. Vui lòng thử lại.');
     }
   };
 
@@ -55,11 +55,6 @@ export function SignupPage() {
         <div className="text-center mb-8">
           <h1 className="text-3xl font-bold text-white mb-2">Đăng ký</h1>
           <p className="text-slate-400">Tạo tài khoản mới</p>
-          <div className="mt-4 p-3 bg-blue-500/10 border border-blue-500/20 rounded-lg">
-            <p className="text-xs text-blue-300">
-              💡 Email có chứa "admin" sẽ được cấp quyền Admin
-            </p>
-          </div>
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-5">

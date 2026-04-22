@@ -21,8 +21,7 @@ export function FeedsPage() {
   const [selectedFeed, setSelectedFeed] = useState<any>(null);
   const [feedStatuses, setFeedStatuses] = useState<Record<string, boolean>>({});
 
-  // Mặc định là admin nếu chưa đăng nhập (demo mode)
-  const isAdmin = user ? user.role === 'admin' : true;
+  const isAdmin = user?.role === 'admin';
 
   const handleAddFeed = (feedData: any) => {
     console.log('Thêm nguồn mới:', feedData);

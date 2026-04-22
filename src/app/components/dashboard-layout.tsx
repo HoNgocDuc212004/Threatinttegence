@@ -76,40 +76,31 @@ export function DashboardLayout() {
               <p className="text-xs text-gray-500 mt-0.5">Cập nhật lần cuối: Vừa xong</p>
             </div>
             <div className="flex items-center gap-4">
-              {user ? (
-                <>
-                  <div className="text-right">
-                    <div className="flex items-center gap-2 justify-end">
-                      <p className="text-sm font-medium text-gray-900">{user.email}</p>
-                      <span className={`text-xs px-2 py-0.5 rounded-full ${
-                        user.role === 'admin'
-                          ? 'bg-purple-100 text-purple-700 font-medium'
-                          : 'bg-gray-100 text-gray-600'
-                      }`}>
-                        {user.role === 'admin' ? 'Admin' : 'User'}
-                      </span>
-                    </div>
-                    {user.phone && <p className="text-xs text-gray-500">{user.phone}</p>}
-                  </div>
-                  <div className="w-10 h-10 bg-blue-600 rounded-full flex items-center justify-center">
-                    <span className="text-white font-medium">{user.email[0].toUpperCase()}</span>
-                  </div>
-                  <button
-                    onClick={handleLogout}
-                    className="flex items-center gap-2 px-3 py-2 text-sm text-gray-700 hover:bg-gray-100 rounded-lg transition"
-                    title="Đăng xuất"
-                  >
-                    <LogOut className="w-4 h-4" />
-                  </button>
-                </>
-              ) : (
-                <button
-                  onClick={() => navigate('/login')}
-                  className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition text-sm font-medium"
-                >
-                  Đăng nhập
-                </button>
-              )}
+              <div className="text-right">
+                <div className="flex items-center gap-2 justify-end">
+                  <p className="text-sm font-medium text-gray-900">{user?.email || 'User'}</p>
+                  {user && (
+                    <span className={`text-xs px-2 py-0.5 rounded-full ${
+                      user.role === 'admin'
+                        ? 'bg-purple-100 text-purple-700 font-medium'
+                        : 'bg-gray-100 text-gray-600'
+                    }`}>
+                      {user.role === 'admin' ? 'Admin' : 'User'}
+                    </span>
+                  )}
+                </div>
+                {user?.phone && <p className="text-xs text-gray-500">{user.phone}</p>}
+              </div>
+              <div className="w-10 h-10 bg-blue-600 rounded-full flex items-center justify-center">
+                <span className="text-white font-medium">{user?.email?.[0].toUpperCase() || 'U'}</span>
+              </div>
+              <button
+                onClick={handleLogout}
+                className="flex items-center gap-2 px-3 py-2 text-sm text-gray-700 hover:bg-gray-100 rounded-lg transition"
+                title="Đăng xuất"
+              >
+                <LogOut className="w-4 h-4" />
+              </button>
             </div>
           </div>
         </header>

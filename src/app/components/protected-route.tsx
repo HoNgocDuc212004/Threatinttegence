@@ -1,11 +1,21 @@
 import { Navigate } from 'react-router';
 import { useAuth } from '../context/auth-context';
-import { ReactNode } from 'react';
+import { ReactNode, useEffect, useState } from 'react';
 
 export function ProtectedRoute({ children }: { children: ReactNode }) {
-  const { user, isLoading } = useAuth();
+  const { user } = useAuth();
+  const [isChecking, setIsChecking] = useState(true);
 
-  if (isLoading) {
+  useEffect(() => {
+    // Đợi một chút để auth context load xong
+    const timer = setTimeout(() => {
+      setIsChecking(false);
+    }, 100);
+
+    return () => clearTimeout(timer);
+  }, []);
+
+  if (isChecking) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-slate-900">
         <div className="text-center">

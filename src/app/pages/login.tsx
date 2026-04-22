@@ -32,8 +32,8 @@ export function LoginPage() {
     try {
       await login(email, password);
       navigate('/');
-    } catch (err) {
-      setError('Đăng nhập thất bại. Vui lòng thử lại.');
+    } catch (err: any) {
+      setError(err.message || 'Đăng nhập thất bại. Vui lòng thử lại.');
     }
   };
 
@@ -43,11 +43,6 @@ export function LoginPage() {
         <div className="text-center mb-8">
           <h1 className="text-3xl font-bold text-white mb-2">Đăng nhập</h1>
           <p className="text-slate-400">Chào mừng trở lại</p>
-          <div className="mt-4 p-3 bg-blue-500/10 border border-blue-500/20 rounded-lg">
-            <p className="text-xs text-blue-300">
-              💡 Email có chứa "admin" sẽ được cấp quyền Admin
-            </p>
-          </div>
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-6">
@@ -95,13 +90,20 @@ export function LoginPage() {
           </button>
         </form>
 
-        <div className="mt-6 text-center">
+        <div className="mt-6 text-center space-y-3">
           <p className="text-slate-400 text-sm">
             Chưa có tài khoản?{' '}
             <Link to="/signup" className="text-purple-400 hover:text-purple-300 font-medium transition">
               Đăng ký ngay
             </Link>
           </p>
+          <div className="pt-3 border-t border-slate-700">
+            <p className="text-xs text-slate-500 mb-1">Tài khoản admin có sẵn:</p>
+            <p className="text-xs text-slate-400">
+              Email: <span className="text-purple-400 font-medium">admin</span> |
+              Mật khẩu: <span className="text-purple-400 font-medium">123234345</span>
+            </p>
+          </div>
         </div>
       </div>
     </div>
