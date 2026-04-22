@@ -1,10 +1,36 @@
-// Mock data generator - simulates API responses
-async function fetchAPI<T>(endpoint: string, options?: RequestInit): Promise<T> {
-  // Simulate network delay
-  await new Promise(resolve => setTimeout(resolve, 300));
+// Backend API URL
+const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000';
 
-  // Return mock data based on endpoint
-  return getMockData(endpoint) as T;
+// Real API fetch with fallback to mock data
+async function fetchAPI<T>(endpoint: string, options?: RequestInit): Promise<T> {
+  try {
+    const url = `${API_BASE_URL}${endpoint}`;
+    const response = await fetch(url, {
+      ...options,
+      headers: {
+        'Content-Type': 'application/json',
+        ...options?.headers,
+      },
+    });
+
+    if (!response.ok) {
+      throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+    }
+
+    const result = await response.json();
+
+    // Backend trả về format { success, message, data }
+    if (result.success !== undefined) {
+      return result.data as T;
+    }
+
+    return result as T;
+  } catch (error) {
+    console.warn(`Backend API failed for ${endpoint}, using mock data:`, error);
+    // Fallback to mock data if backend unavailable
+    await new Promise(resolve => setTimeout(resolve, 300));
+    return getMockData(endpoint) as T;
+  }
 }
 
 function getMockData(endpoint: string): any {
