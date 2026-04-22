@@ -7,16 +7,49 @@ import { Plus, RefreshCw, Trash2, Edit, Power } from 'lucide-react';
 import { useAPI } from '../hooks/use-api';
 import { api } from '../services/api';
 import { AddFeedDialog } from '../components/add-feed-dialog';
+import { EditFeedDialog } from '../components/edit-feed-dialog';
+import { DeleteConfirmDialog } from '../components/delete-confirm-dialog';
 import { toast } from 'sonner';
+import { useAuth } from '../context/auth-context';
 
 export function FeedsPage() {
+  const { user } = useAuth();
   const { data: feeds, loading, error, refetch } = useAPI(() => api.feeds.list(), []);
   const [showAddModal, setShowAddModal] = useState(false);
+  const [showEditModal, setShowEditModal] = useState(false);
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [selectedFeed, setSelectedFeed] = useState<any>(null);
+
+  const isAdmin = user?.role === 'admin';
 
   const handleAddFeed = (feedData: any) => {
     console.log('Thêm nguồn mới:', feedData);
     toast.success(`Đã thêm nguồn "${feedData.name}" thành công!`);
     refetch();
+  };
+
+  const handleEditFeed = (feedData: any) => {
+    console.log('Cập nhật nguồn:', feedData);
+    toast.success(`Đã cập nhật nguồn "${feedData.name}" thành công!`);
+    refetch();
+  };
+
+  const handleDeleteFeed = () => {
+    if (selectedFeed) {
+      console.log('Xóa nguồn:', selectedFeed.id);
+      toast.success(`Đã xóa nguồn "${selectedFeed.name}" thành công!`);
+      refetch();
+    }
+  };
+
+  const openEditModal = (feed: any) => {
+    setSelectedFeed(feed);
+    setShowEditModal(true);
+  };
+
+  const openDeleteModal = (feed: any) => {
+    setSelectedFeed(feed);
+    setShowDeleteModal(true);
   };
 
   if (loading) {
@@ -44,10 +77,12 @@ export function FeedsPage() {
             <RefreshCw className="w-4 h-4 mr-2" />
             Làm mới
           </Button>
-          <Button onClick={() => setShowAddModal(true)}>
-            <Plus className="w-4 h-4 mr-2" />
-            Thêm nguồn
-          </Button>
+          {isAdmin && (
+            <Button onClick={() => setShowAddModal(true)}>
+              <Plus className="w-4 h-4 mr-2" />
+              Thêm nguồn
+            </Button>
+          )}
         </div>
       </div>
 
@@ -91,15 +126,27 @@ export function FeedsPage() {
               )}
             </div>
 
-            <div className="flex gap-2">
-              <Button variant="outline" size="sm" className="flex-1">
-                <Edit className="w-3 h-3 mr-1" />
-                Sửa
-              </Button>
-              <Button variant="outline" size="sm" className="text-red-600 hover:text-red-700">
-                <Trash2 className="w-3 h-3" />
-              </Button>
-            </div>
+            {isAdmin && (
+              <div className="flex gap-2">
+                <Button
+                  variant="outline"
+                  size="sm"
+                  className="flex-1"
+                  onClick={() => openEditModal(feed)}
+                >
+                  <Edit className="w-3 h-3 mr-1" />
+                  Sửa
+                </Button>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  className="text-red-600 hover:text-red-700 hover:bg-red-50"
+                  onClick={() => openDeleteModal(feed)}
+                >
+                  <Trash2 className="w-3 h-3" />
+                </Button>
+              </div>
+            )}
           </Card>
         ))}
       </div>
@@ -154,6 +201,21 @@ export function FeedsPage() {
         isOpen={showAddModal}
         onClose={() => setShowAddModal(false)}
         onAdd={handleAddFeed}
+      />
+
+      <EditFeedDialog
+        isOpen={showEditModal}
+        onClose={() => setShowEditModal(false)}
+        onSave={handleEditFeed}
+        feed={selectedFeed}
+      />
+
+      <DeleteConfirmDialog
+        isOpen={showDeleteModal}
+        onClose={() => setShowDeleteModal(false)}
+        onConfirm={handleDeleteFeed}
+        title="Xóa nguồn cấp dữ liệu?"
+        message={`Bạn có chắc chắn muốn xóa nguồn "${selectedFeed?.name}"? Hành động này không thể hoàn tác.`}
       />
     </div>
   );

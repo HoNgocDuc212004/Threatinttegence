@@ -77,7 +77,16 @@ export function DashboardLayout() {
             </div>
             <div className="flex items-center gap-4">
               <div className="text-right">
-                <p className="text-sm font-medium text-gray-900">{user?.email || 'User'}</p>
+                <div className="flex items-center gap-2 justify-end">
+                  <p className="text-sm font-medium text-gray-900">{user?.email || 'User'}</p>
+                  <span className={`text-xs px-2 py-0.5 rounded-full ${
+                    user?.role === 'admin'
+                      ? 'bg-purple-100 text-purple-700 font-medium'
+                      : 'bg-gray-100 text-gray-600'
+                  }`}>
+                    {user?.role === 'admin' ? 'Admin' : 'User'}
+                  </span>
+                </div>
                 {user?.phone && <p className="text-xs text-gray-500">{user.phone}</p>}
               </div>
               <div className="w-10 h-10 bg-blue-600 rounded-full flex items-center justify-center">

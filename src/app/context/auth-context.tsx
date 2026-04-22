@@ -5,6 +5,7 @@ interface User {
   email: string;
   phone?: string;
   name?: string;
+  role: 'admin' | 'user';
 }
 
 interface AuthContextType {
@@ -34,9 +35,13 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     try {
       await new Promise(resolve => setTimeout(resolve, 500));
 
+      // Admin nếu email có "admin", còn lại là user
+      const isAdmin = email.toLowerCase().includes('admin');
+
       const mockUser: User = {
         id: Math.random().toString(36).substring(7),
         email,
+        role: isAdmin ? 'admin' : 'user',
       };
 
       setUser(mockUser);
@@ -51,10 +56,14 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     try {
       await new Promise(resolve => setTimeout(resolve, 500));
 
+      // Admin nếu email có "admin", còn lại là user
+      const isAdmin = email.toLowerCase().includes('admin');
+
       const mockUser: User = {
         id: Math.random().toString(36).substring(7),
         email,
         phone,
+        role: isAdmin ? 'admin' : 'user',
       };
 
       setUser(mockUser);
