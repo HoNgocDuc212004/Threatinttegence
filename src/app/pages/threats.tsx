@@ -6,6 +6,7 @@ import { Button } from '../components/ui/button';
 import { Search, Filter, Download, Eye, RefreshCw } from 'lucide-react';
 import { useAPI } from '../hooks/use-api';
 import { api, Alert } from '../services/api';
+import { ExportMenu } from '../components/export-menu';
 
 interface Threat {
   id: string;
@@ -110,10 +111,7 @@ export function ThreatsPage() {
               <Filter className="w-4 h-4 mr-2" />
               Bộ lọc
             </Button>
-            <Button variant="outline">
-              <Download className="w-4 h-4 mr-2" />
-              Xuất
-            </Button>
+            <ExportMenu data={filteredThreats} filename="threats-report" />
           </div>
         </div>
       </Card>

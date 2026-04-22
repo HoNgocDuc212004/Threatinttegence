@@ -6,10 +6,18 @@ import { Badge } from '../components/ui/badge';
 import { Plus, RefreshCw, Trash2, Edit, Power } from 'lucide-react';
 import { useAPI } from '../hooks/use-api';
 import { api } from '../services/api';
+import { AddFeedDialog } from '../components/add-feed-dialog';
+import { toast } from 'sonner';
 
 export function FeedsPage() {
   const { data: feeds, loading, error, refetch } = useAPI(() => api.feeds.list(), []);
   const [showAddModal, setShowAddModal] = useState(false);
+
+  const handleAddFeed = (feedData: any) => {
+    console.log('Thêm nguồn mới:', feedData);
+    toast.success(`Đã thêm nguồn "${feedData.name}" thành công!`);
+    refetch();
+  };
 
   if (loading) {
     return (
@@ -141,6 +149,12 @@ export function FeedsPage() {
           </p>
         </Card>
       </div>
+
+      <AddFeedDialog
+        isOpen={showAddModal}
+        onClose={() => setShowAddModal(false)}
+        onAdd={handleAddFeed}
+      />
     </div>
   );
 }
