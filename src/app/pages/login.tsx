@@ -90,20 +90,13 @@ export function LoginPage() {
           </button>
         </form>
 
-        <div className="mt-6 text-center space-y-3">
+        <div className="mt-6 text-center">
           <p className="text-slate-400 text-sm">
             Chưa có tài khoản?{' '}
             <Link to="/signup" className="text-purple-400 hover:text-purple-300 font-medium transition">
               Đăng ký ngay
             </Link>
           </p>
-          <div className="pt-3 border-t border-slate-700">
-            <p className="text-xs text-slate-500 mb-1">Tài khoản admin có sẵn:</p>
-            <p className="text-xs text-slate-400">
-              Email: <span className="text-purple-400 font-medium">admin</span> |
-              Mật khẩu: <span className="text-purple-400 font-medium">123234345</span>
-            </p>
-          </div>
         </div>
       </div>
     </div>
