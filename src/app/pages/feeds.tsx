@@ -19,6 +19,7 @@ export function FeedsPage() {
   const [showEditModal, setShowEditModal] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [selectedFeed, setSelectedFeed] = useState<any>(null);
+  const [feedStatuses, setFeedStatuses] = useState<Record<string, boolean>>({});
 
   const isAdmin = user?.role === 'admin';
 
@@ -53,14 +54,22 @@ export function FeedsPage() {
   };
 
   const toggleFeedStatus = (feed: any) => {
-    const newStatus = !feed.enabled;
+    const currentStatus = feedStatuses[feed.id] ?? feed.enabled;
+    const newStatus = !currentStatus;
+
+    // Cập nhật UI ngay lập tức
+    setFeedStatuses(prev => ({ ...prev, [feed.id]: newStatus }));
+
     console.log('Toggle feed status:', feed.id, newStatus);
     toast.success(
       newStatus
         ? `Đã kích hoạt nguồn "${feed.name}"`
         : `Đã tạm dừng nguồn "${feed.name}"`
     );
-    refetch();
+  };
+
+  const getFeedStatus = (feed: any) => {
+    return feedStatuses[feed.id] ?? feed.enabled;
   };
 
   if (loading) {
@@ -111,8 +120,8 @@ export function FeedsPage() {
               <div className="flex-1">
                 <h3 className="font-semibold text-lg mb-1">{feed.name}</h3>
                 <p className="text-sm text-gray-600 mb-2">{feed.source}</p>
-                <Badge variant={feed.enabled ? 'default' : 'secondary'}>
-                  {feed.enabled ? 'Đang hoạt động' : 'Tạm dừng'}
+                <Badge variant={getFeedStatus(feed) ? 'default' : 'secondary'}>
+                  {getFeedStatus(feed) ? 'Đang hoạt động' : 'Tạm dừng'}
                 </Badge>
               </div>
               <Button
@@ -120,11 +129,11 @@ export function FeedsPage() {
                 size="sm"
                 onClick={() => toggleFeedStatus(feed)}
                 className={`transition-colors ${
-                  feed.enabled
+                  getFeedStatus(feed)
                     ? 'text-green-600 hover:text-green-700 hover:bg-green-50'
-                    : 'text-gray-400 hover:text-gray-600 hover:bg-gray-50'
+                    : 'text-red-500 hover:text-red-600 hover:bg-red-50'
                 }`}
-                title={feed.enabled ? 'Tạm dừng nguồn' : 'Kích hoạt nguồn'}
+                title={getFeedStatus(feed) ? 'Tạm dừng nguồn' : 'Kích hoạt nguồn'}
               >
                 <Power className="w-4 h-4" />
               </Button>
@@ -193,13 +202,13 @@ export function FeedsPage() {
         <Card className="p-4">
           <p className="text-sm text-gray-600">Đang hoạt động</p>
           <p className="text-2xl font-bold mt-1 text-green-600">
-            {feedList.filter(f => f.enabled).length}
+            {feedList.filter(f => getFeedStatus(f)).length}
           </p>
         </Card>
         <Card className="p-4">
           <p className="text-sm text-gray-600">Tạm dừng</p>
-          <p className="text-2xl font-bold mt-1 text-gray-600">
-            {feedList.filter(f => !f.enabled).length}
+          <p className="text-2xl font-bold mt-1 text-red-600">
+            {feedList.filter(f => !getFeedStatus(f)).length}
           </p>
         </Card>
         <Card className="p-4">
