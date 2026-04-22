@@ -27,7 +27,7 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 // Tài khoản admin cố định
 const ADMIN_ACCOUNT = {
-  email: 'admin',
+  email: 'admin@threatshield.com',
   password: '123234345',
   role: 'admin' as const,
 };
