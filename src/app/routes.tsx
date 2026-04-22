@@ -9,7 +9,6 @@ import { FeedsPage } from "./pages/feeds";
 import { SettingsPage } from "./pages/settings";
 import { LoginPage } from "./pages/login";
 import { SignupPage } from "./pages/signup";
-import { ProtectedRoute } from "./components/protected-route";
 
 export const router = createBrowserRouter([
   {
@@ -22,11 +21,7 @@ export const router = createBrowserRouter([
   },
   {
     path: "/",
-    element: (
-      <ProtectedRoute>
-        <DashboardLayout />
-      </ProtectedRoute>
-    ),
+    Component: DashboardLayout,
     children: [
       { index: true, Component: OverviewPage },
       { path: "map", Component: ThreatMapPage },
