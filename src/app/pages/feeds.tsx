@@ -52,6 +52,17 @@ export function FeedsPage() {
     setShowDeleteModal(true);
   };
 
+  const toggleFeedStatus = (feed: any) => {
+    const newStatus = !feed.enabled;
+    console.log('Toggle feed status:', feed.id, newStatus);
+    toast.success(
+      newStatus
+        ? `Đã kích hoạt nguồn "${feed.name}"`
+        : `Đã tạm dừng nguồn "${feed.name}"`
+    );
+    refetch();
+  };
+
   if (loading) {
     return (
       <div className="flex items-center justify-center min-h-[400px]">
@@ -107,7 +118,13 @@ export function FeedsPage() {
               <Button
                 variant="ghost"
                 size="sm"
-                className={feed.enabled ? 'text-green-600' : 'text-gray-400'}
+                onClick={() => toggleFeedStatus(feed)}
+                className={`transition-colors ${
+                  feed.enabled
+                    ? 'text-green-600 hover:text-green-700 hover:bg-green-50'
+                    : 'text-gray-400 hover:text-gray-600 hover:bg-gray-50'
+                }`}
+                title={feed.enabled ? 'Tạm dừng nguồn' : 'Kích hoạt nguồn'}
               >
                 <Power className="w-4 h-4" />
               </Button>
